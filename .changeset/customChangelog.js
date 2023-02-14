@@ -1,3 +1,4 @@
+require("dotenv").config();
 const {
   getInfo,
   getInfoFromPullRequest,
@@ -46,7 +47,6 @@ const changelogFunctions = {
     }
 
     let prFromSummary;
-    let commitFromSummary;
     let usersFromSummary = [];
 
     const replacedChangelog = changeset.summary
@@ -55,19 +55,11 @@ const changelogFunctions = {
         if (!isNaN(num)) prFromSummary = num;
         return "";
       })
-      .replace(/^\s*commit:\s*([^\s]+)/im, (_, commit) => {
-        commitFromSummary = commit;
-        return "";
-      })
       .replace(/^\s*(?:author|user):\s*@?([^\s]+)/gim, (_, user) => {
         usersFromSummary.push(user);
         return "";
       })
       .trim();
-    console.log(
-      "🚀 ~ file: customChangelog.js:67 ~ getReleaseLine: ~ changeset",
-      changeset
-    );
 
     const [firstLine, ...futureLines] = replacedChangelog
       .split("\n")
@@ -79,24 +71,10 @@ const changelogFunctions = {
           repo: options.repo,
           pull: prFromSummary,
         });
-        if (commitFromSummary) {
-          links = {
-            ...links,
-            commit: `[\`${commitFromSummary}\`](https://github.com/${options.repo}/commit/${commitFromSummary})`,
-          };
-        }
         return links;
       }
-      const commitToFetchFrom = commitFromSummary || changeset.commit;
-      if (commitToFetchFrom) {
-        let { links } = await getInfo({
-          repo: options.repo,
-          commit: commitToFetchFrom,
-        });
-        return links;
-      }
+
       return {
-        commit: null,
         pull: null,
         user: null,
       };
@@ -113,11 +91,10 @@ const changelogFunctions = {
 
     const prefix = [
       links.pull === null ? "" : ` ${links.pull}`,
-      links.commit === null ? "" : ` ${links.commit}`,
-      users === null ? "" : ` Thanks ${users}!`,
+      users === null ? "" : ` ${users}`,
     ].join("");
 
-    return `\n\n-${prefix ? `${prefix} -` : ""} ${firstLine}\n${futureLines
+    return `\n\n-${prefix ? `${prefix}` : ""} ${firstLine}\n${futureLines
       .map((l) => `  ${l}`)
       .join("\n")}`;
   },

@@ -1,5 +1,11 @@
 # changeset-github
 
+## 1.0.0
+
+### Major Changes
+
+- [#2](https://github.com/mmadeira-fuze/github-changesets/pull/2) [@mmadeira-fuze](https://github.com/mmadeira-fuze)
+
 ## 0.4.0
 
 ### Minor Changes

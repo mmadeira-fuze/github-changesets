@@ -1,5 +1,11 @@
 # changeset-github
 
+## 0.4.1
+
+### Patch Changes
+
+- [#2](https://github.com/mmadeira-fuze/github-changesets/pull/2) [@mmadeira](https://github.com/mmadeira)
+
 ## 0.4.0
 
 ### Minor Changes

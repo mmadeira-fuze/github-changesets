@@ -66,18 +66,24 @@ const changelogFunctions = {
       .map((l) => l.trimRight());
 
     const links = await (async () => {
-      if (prFromSummary !== undefined) {
-        let { links } = await getInfoFromPullRequest({
-          repo: options.repo,
-          pull: prFromSummary,
-        });
-        return links;
-      }
+      try {
+        if (prFromSummary !== undefined) {
+          let { links } = await getInfoFromPullRequest({
+            repo: options.repo,
+            pull: prFromSummary,
+          });
+          return links;
+        }
 
-      return {
-        pull: null,
-        user: null,
-      };
+        return {
+          pull: null,
+          user: null,
+        };
+      } catch (error) {
+        throw new Error(
+          `The pull request #${prFromSummary} was not found or doesn't exist. Please be sure to open first a pull request and then update the changelog.`
+        );
+      }
     })();
 
     const users = usersFromSummary.length
